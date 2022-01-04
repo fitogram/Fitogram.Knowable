@@ -21,26 +21,26 @@ script:
 
 deploy:
 
-  # publish Fitogram.Optional
+  # publish Fitogram.Knowable
   - provider: script
     script:
-      - dotnet nuget push ./Fitogram.Knowable/bin/Release/Fitogram.Knowable.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/085eb83a-9100-4b7d-8748-fcb7182d5111/api/v3/index.json;
+      - dotnet nuget push ./Fitogram.Knowable/bin/Release/Fitogram.Knowable.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/32a01064-a2fe-4043-b079-f23bbc4ab1af/api/v3/index.json;
     skip_cleanup: true
     on:
       all_branches: true
 
-  # publish Fitogram.Optional.SystemTextJson
+  # publish Fitogram.Knowable.SystemTextJson
   - provider: script
     script:
-      - dotnet nuget push ./Fitogram.Knowable.SystemTextJson/bin/Release/Fitogram.Knowable.SystemTextJson.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/085eb83a-9100-4b7d-8748-fcb7182d5111/api/v3/index.json;
+      - dotnet nuget push ./Fitogram.Knowable.SystemTextJson/bin/Release/Fitogram.Knowable.SystemTextJson.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/32a01064-a2fe-4043-b079-f23bbc4ab1af/api/v3/index.json;
     skip_cleanup: true
     on:
       all_branches: true
 
-  # publish Fitogram.Optional.NewtonsoftJson
+  # publish Fitogram.Knowable.NewtonsoftJson
   - provider: script
     script:
-      - dotnet nuget push ./Fitogram.Knowable.NewtonsoftJson/bin/Release/Fitogram.Knowable.NewtonsoftJson.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/085eb83a-9100-4b7d-8748-fcb7182d5111/api/v3/index.json;
+      - dotnet nuget push ./Fitogram.Knowable.NewtonsoftJson/bin/Release/Fitogram.Knowable.NewtonsoftJson.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/32a01064-a2fe-4043-b079-f23bbc4ab1af/api/v3/index.json;
     skip_cleanup: true
     on:
       all_branches: true
