@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <RootNamespace>Fitogram.Knowable.SystemTextJson</RootNamespace>
+        <AssemblyName>Fitogram.Knowable.SystemTextJson</AssemblyName>
+        <LangVersion>8</LangVersion>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.Text.Json" Version="5.0.2" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Fitogram.Knowable\Fitogram.Knowable.csproj" />
+    </ItemGroup>
+
+</Project>

@@ -1,0 +1,49 @@
+dist: xenial
+language: csharp
+dotnet: 3.1
+mono: none
+
+script:
+
+  # Compose package version
+  - PACKAGE_VERSION=1.0
+  - PACKAGE_VERSION=$PACKAGE_VERSION.$TRAVIS_BUILD_NUMBER
+  - if [[ $TRAVIS_BRANCH != "master" ]]; then PACKAGE_VERSION=$PACKAGE_VERSION-$TRAVIS_BRANCH; fi
+  - PACKAGE_VERSION=${PACKAGE_VERSION//\//-}
+  # Restore nuget packages
+  - dotnet restore
+  # Build nuget packages
+  - dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable
+  - dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable.NewtonsoftJson
+  - dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable.SystemTextJson
+  # Run tests
+  - dotnet test --nologo
+
+deploy:
+
+  # publish Fitogram.Optional
+  - provider: script
+    script:
+      - dotnet nuget push ./Fitogram.Knowable/bin/Release/Fitogram.Knowable.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/085eb83a-9100-4b7d-8748-fcb7182d5111/api/v3/index.json;
+    skip_cleanup: true
+    on:
+      all_branches: true
+
+  # publish Fitogram.Optional.SystemTextJson
+  - provider: script
+    script:
+      - dotnet nuget push ./Fitogram.Knowable.SystemTextJson/bin/Release/Fitogram.Knowable.SystemTextJson.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/085eb83a-9100-4b7d-8748-fcb7182d5111/api/v3/index.json;
+    skip_cleanup: true
+    on:
+      all_branches: true
+
+  # publish Fitogram.Optional.NewtonsoftJson
+  - provider: script
+    script:
+      - dotnet nuget push ./Fitogram.Knowable.NewtonsoftJson/bin/Release/Fitogram.Knowable.NewtonsoftJson.$PACKAGE_VERSION.nupkg -s https://www.myget.org/F/fitogram/auth/085eb83a-9100-4b7d-8748-fcb7182d5111/api/v3/index.json;
+    skip_cleanup: true
+    on:
+      all_branches: true
+
+after_success:
+  - echo "Tadaaaaaa :)"
