@@ -1,36 +1,20 @@
-# Fitogram.Knowable
+﻿using System;
+using System.Text.Json;
+using Fitogram.Knowable;
 
-## Knowable\<T>
+// Knowable<MyEnum> myKnowableEnum = new Knowable<MyEnum>();
+// myKnowableEnum = 1;
+// Console.WriteLine(myKnowableEnum.IsKnown); // True
+// Console.WriteLine(myKnowableEnum.Value); // Foo
+// myKnowableEnum = 2;
+// Console.WriteLine(myKnowableEnum.IsKnown); // False
+// Console.WriteLine(myKnowableEnum.Value); // Exception!
+//
+// public enum MyEnum
+// {
+//     Foo = 1,
+// }
 
-### Basic example
-
-The `Knowable<T>` wrapper tells us if the enum is known:
-
-```csharp
-public enum MyEnum
-{
-    Foo = 1,
-}
-
-Knowable<MyEnum> myKnowableEnum = new Knowable<MyEnum>();
-myKnowableEnum = 1;
-
-Console.WriteLine(myKnowableEnum.IsKnown); // True
-Console.WriteLine(myKnowableEnum.Value); // Foo
-
-myKnowableEnum = 2;
-
-Console.WriteLine(myKnowableEnum.IsKnown); // False
-Console.WriteLine(myKnowableEnum.Value); // Exception!
-```
-
-https://dotnetfiddle.net/IewleI
-
-### Use it with JSON
-
-This is useful when trying to deserialize a string to an enum:
-
-```csharp
 JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
 jsonSerializerOptions.Converters.Add(new Fitogram.Knowable.SystemTextJson.KnowableJsonConverter());
 jsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
@@ -55,4 +39,3 @@ public class MyDto
 {
     public Knowable<MyEnum> MyEnum { get; set; }
 }
-```

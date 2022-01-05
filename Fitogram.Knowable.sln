@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fitogram.Knowable.SystemTex
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fitogram.Knowable.Tests", "Fitogram.Knowable.Tests\Fitogram.Knowable.Tests.csproj", "{8F42BCA0-6737-4609-A935-7FB8AD750D43}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fitogram.Knowable.Examples", "Fitogram.Knowable.Examples\Fitogram.Knowable.Examples.csproj", "{9962CFEC-FE6A-428F-9221-C49A9E5A441B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{8F42BCA0-6737-4609-A935-7FB8AD750D43}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F42BCA0-6737-4609-A935-7FB8AD750D43}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F42BCA0-6737-4609-A935-7FB8AD750D43}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9962CFEC-FE6A-428F-9221-C49A9E5A441B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9962CFEC-FE6A-428F-9221-C49A9E5A441B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9962CFEC-FE6A-428F-9221-C49A9E5A441B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9962CFEC-FE6A-428F-9221-C49A9E5A441B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
