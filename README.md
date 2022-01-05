@@ -56,3 +56,32 @@ public class MyDto
     public Knowable<MyEnum> MyEnum { get; set; }
 }
 ```
+
+### Initialization
+
+Creating a Knowable enum is different from creating a normal enum because the Knowable default value is null rather than 0.
+
+```cshtml
+MyClassWithNormalEnum myClassWithNormalEnum = new MyClassWithNormalEnum();
+Console.WriteLine(myClassWithNormalEnum.MyEnum); // 0
+
+MyClassWithKnowableEnum myClassWithKnowableEnum = new MyClassWithKnowableEnum();
+Console.WriteLine(myClassWithKnowableEnum.MyEnum.InnerValue == null); // True
+
+public enum MyEnum
+{
+    // No actual values.
+}
+
+public class MyClassWithNormalEnum
+{
+    public MyEnum MyEnum { get; set; }
+}
+
+public class MyClassWithKnowableEnum
+{
+    public Knowable<MyEnum> MyEnum { get; set; }
+}
+```
+
+https://dotnetfiddle.net/7uLoUv
