@@ -18,7 +18,7 @@ namespace Fitogram.Knowable
         /// </summary>
         public object InnerValue => _innerValue;
 
-        public bool IsKnown => Enum.IsDefined(typeof(T), _innerValue);
+        public bool IsKnown => _innerValue != null && Enum.IsDefined(typeof(T), _innerValue);
 
         /// <exception cref="InvalidEnumArgumentException">May throw this an exception if the underlying InnerValue is an unexpected type or cannot be converted to the enum.</exception>
         public T Value
