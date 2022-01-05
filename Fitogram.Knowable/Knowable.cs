@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace Fitogram.Knowable
 {
@@ -10,54 +11,46 @@ namespace Fitogram.Knowable
 
     public struct Knowable<T> : IKnowable where T : System.Enum
     {
-        // private string _value;
-        private object _value;
+        private object _innerValue;
 
-        public bool IsKnown => Enum.IsDefined(typeof(T), _value);
+        /// <summary>
+        /// The underlying value of the enum, likely to be a string or an int depending on if the string enum converter is also being used.
+        /// </summary>
+        public object InnerValue => _innerValue;
 
+        public bool IsKnown => Enum.IsDefined(typeof(T), _innerValue);
+
+        /// <exception cref="InvalidEnumArgumentException">May throw this an exception if the underlying InnerValue is an unexpected type or cannot be converted to the enum.</exception>
         public T Value
         {
-            // get => this.IsKnown
-            //     ? (T)Enum.Parse(typeof(T), _value)
-            //     : throw new Exception("Enum not known.");
             get
             {
-                if (!IsKnown) throw new Exception("Enum not known.");
+                if (!IsKnown) throw new InvalidEnumArgumentException("Cannot convert inner value to known enum. Check that the enum IsKnown before trying to get the value.");
 
-                return _value switch
+                return _innerValue switch
                 {
-                    int => (T) Enum.ToObject(typeof(T), _value),
-                    string => (T) Enum.Parse(typeof(T), _value.ToString()),
-                    _ => throw new Exception("Type of enum not known.")
+                    int => (T) Enum.ToObject(typeof(T), _innerValue),
+                    string => (T) Enum.Parse(typeof(T), _innerValue.ToString()),
+                    _ => throw new InvalidEnumArgumentException("Type of enum not known.")
                 };
-
-                // switch (_value)
-                // {
-                //     case int value:
-                //         return (T)Enum.ToObject(typeof(T) , value);
-                //         break;
-                //     case string:
-                //         return (T) Enum.Parse(typeof(T), _value.ToString());
-                //         break;
-                // }
             }
-            set => _value = value.ToString();
+            set => _innerValue = value.ToString();
         }
 
         object IKnowable.Value
         {
             get => Value;
-            set => _value = value;
+            set => _innerValue = value;
         }
 
         public static implicit operator Knowable<T>(string value)
         {
-            return new Knowable<T> { _value = value, };
+            return new Knowable<T> { _innerValue = value, };
         }
 
         public static implicit operator Knowable<T>(int value)
         {
-            return new Knowable<T> { _value = value, };
+            return new Knowable<T> { _innerValue = value, };
         }
 
         public static implicit operator Knowable<T>(T value)
