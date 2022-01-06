@@ -1,18 +1,17 @@
-﻿using Newtonsoft.Json;
-using Shouldly;
+﻿using Shouldly;
 using Xunit;
 
 namespace Fitogram.Knowable.Tests
 {
     public class KnowableTests
     {
-        public enum Enum
+        private enum Enum
         {
             Foo = 1,
         }
         
         [Fact]
-        public void KnowableShouldSupportNull()
+        public void KnowableDefaultShouldBe0()
         {
             // [Arrange]
 
@@ -21,7 +20,7 @@ namespace Fitogram.Knowable.Tests
             // [Act/Assert]
 
             myEnum.IsKnown.ShouldBe(false);
-            myEnum.InnerValue.ShouldBe(null);
+            myEnum.InnerValue.ShouldBe(0);
         }
     }
 }

@@ -25,10 +25,6 @@ namespace Fitogram.Knowable.SystemTextJson
 
                     bool isKnowable = typeof(IKnowable).IsAssignableFrom(propertyInfo.PropertyType);
 
-                    // Type propertyType = isKnowable
-                    //     ? ((IKnowable)propertyInfo.GetValue(result)).GetType()
-                    //     : propertyInfo.PropertyType;
-
                     string jsonPropertyName = propertyInfo.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name.ToLower()
                         ?? propertyInfo.Name.ToLower();
 

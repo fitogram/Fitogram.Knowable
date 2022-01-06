@@ -30,10 +30,6 @@ namespace Fitogram.Knowable.NewtonsoftJson
 
                 bool isKnowable = typeof(IKnowable).IsAssignableFrom(propertyInfo.PropertyType);
 
-                // Type propertyType = isKnowable
-                //     ? ((IKnowable)propertyInfo.GetValue(result)).GetType()
-                //     : propertyInfo.PropertyType;
-
                 string jsonPropertyName = propertyInfo.GetCustomAttribute<JsonPropertyAttribute>()?.PropertyName.ToLower()
                     ?? propertyInfo.Name.ToLower();
 
