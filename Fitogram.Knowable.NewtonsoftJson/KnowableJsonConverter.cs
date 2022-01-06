@@ -12,9 +12,9 @@ using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Fitogram.Knowable.NewtonsoftJson
 {
-    public class KnowableJsonConverter<T> : JsonConverter<Knowable<T>> where T : Enum
+    public class KnowableJsonConverter : JsonConverter
     {
-        public Knowable<T> object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             object result = (object)Activator.CreateInstance(objectType);
 
@@ -28,7 +28,7 @@ namespace Fitogram.Knowable.NewtonsoftJson
                 if (propertyInfo.GetCustomAttribute<JsonIgnoreAttribute>() != null)
                     continue;
 
-                bool isKnowable = typeof(IKnowable<T>).IsAssignableFrom(propertyInfo.PropertyType);
+                bool isKnowable = typeof(IKnowable).IsAssignableFrom(propertyInfo.PropertyType);
 
                 // Type propertyType = isKnowable
                 //     ? ((IKnowable)propertyInfo.GetValue(result)).GetType()
@@ -61,7 +61,7 @@ namespace Fitogram.Knowable.NewtonsoftJson
 
                     if (isKnowable)
                     {
-                        IKnowable<T> knowable = (IKnowable<T>)propertyInfo.GetValue(result);
+                        IKnowable knowable = (IKnowable)propertyInfo.GetValue(result);
                         knowable.Value = value;
                         propertyInfo.SetValue(result, knowable);
                     }

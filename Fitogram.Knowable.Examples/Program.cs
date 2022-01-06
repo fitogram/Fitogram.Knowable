@@ -16,7 +16,7 @@ using Fitogram.Knowable;
 // }
 
 JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
-jsonSerializerOptions.Converters.Add(new Fitogram.Knowable.SystemTextJson.KnowableJsonConverter<MyEnum>());
+jsonSerializerOptions.Converters.Add(new Fitogram.Knowable.SystemTextJson.KnowableJsonConverter());
 jsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 
 // The JSON would come from an external application which might have enums your application does not know.
