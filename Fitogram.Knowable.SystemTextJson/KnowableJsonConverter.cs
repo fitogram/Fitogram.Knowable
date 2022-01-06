@@ -7,9 +7,9 @@ using System.Text.Json.Serialization;
 
 namespace Fitogram.Knowable.SystemTextJson
 {
-    public class KnowableJsonConverter : JsonConverter<object>
+    public class KnowableJsonConverter<T> : JsonConverter<IKnowable<T>> where T : Enum
     {
-        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        public override IKnowable<T> Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             object result = (object)Activator.CreateInstance(typeToConvert);
 
@@ -23,11 +23,7 @@ namespace Fitogram.Knowable.SystemTextJson
                     if (propertyInfo.GetCustomAttribute<JsonIgnoreAttribute>() != null)
                         continue;
 
-                    bool isKnowable = typeof(IKnowable).IsAssignableFrom(propertyInfo.PropertyType);
-
-                    // Type propertyType = isKnowable
-                    //     ? ((IKnowable)propertyInfo.GetValue(result)).GetType()
-                    //     : propertyInfo.PropertyType;
+                    bool isKnowable = typeof(IKnowable<T>).IsAssignableFrom(propertyInfo.PropertyType);
 
                     string jsonPropertyName = propertyInfo.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name.ToLower()
                         ?? propertyInfo.Name.ToLower();
@@ -49,7 +45,7 @@ namespace Fitogram.Knowable.SystemTextJson
 
                             if (isKnowable)
                             {
-                                IKnowable knowable = (IKnowable)propertyInfo.GetValue(result);
+                                IKnowable<T> knowable = (IKnowable<T>)propertyInfo.GetValue(result);
                                 knowable.Value = value;
                                 propertyInfo.SetValue(result, knowable);
                             }
@@ -65,7 +61,7 @@ namespace Fitogram.Knowable.SystemTextJson
             return result;
         }
 
-        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, IKnowable<T> value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
 
@@ -82,9 +78,9 @@ namespace Fitogram.Knowable.SystemTextJson
                 Type propertyType = propertyInfo.PropertyType;
 
                 //Resolve optional wrapper
-                if (typeof(IKnowable).IsAssignableFrom(propertyType))
+                if (typeof(IKnowable<T>).IsAssignableFrom(propertyType))
                 {
-                    IKnowable knowableProperty = (IKnowable)propertyValue;
+                    IKnowable<T> knowableProperty = (IKnowable<T>)propertyValue;
 
                     //Skip property if no value is set
                     if (knowableProperty.IsKnown == false)
@@ -114,7 +110,7 @@ namespace Fitogram.Knowable.SystemTextJson
 
         public override bool CanConvert(Type typeToConvert)
         {
-            return typeToConvert.GetProperties().Any(p => typeof(IKnowable).IsAssignableFrom(p.PropertyType));
+            return typeToConvert.GetProperties().Any(p => typeof(IKnowable<T>).IsAssignableFrom(p.PropertyType));
         }
     }
 }
