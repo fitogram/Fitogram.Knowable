@@ -1,3 +1,4 @@
+using System;
 using Newtonsoft.Json;
 using Shouldly;
 using Xunit;
@@ -126,7 +127,9 @@ namespace Fitogram.Knowable.Tests
 
         public class DummyWithStandardProperty
         {
-            public string MyProperty { get; set; }
+            public string MyString { get; set; }
+            public Guid MyGuid { get; set; }
+            public Knowable<EnumWithBar> KnowableEnum { get; set; }
         }
 
         [Fact]
@@ -138,7 +141,9 @@ namespace Fitogram.Knowable.Tests
 
             DummyWithStandardProperty input = new DummyWithStandardProperty
             {
-                MyProperty = "Foo",
+                MyString = "Foo",
+                MyGuid = Guid.NewGuid(),
+                KnowableEnum = EnumWithBar.Bar,
             };
 
             // [Act]
@@ -150,7 +155,9 @@ namespace Fitogram.Knowable.Tests
 
             // [Assert]
 
-            output.MyProperty.ShouldBe(input.MyProperty);
+            output.MyString.ShouldBe(input.MyString);
+            output.MyGuid.ShouldBe(input.MyGuid);
+            output.KnowableEnum.ShouldBe(input.KnowableEnum);
         }
 
         // Custom serializer is not used on single properties. I think that's just not supported.
