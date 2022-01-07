@@ -5,6 +5,7 @@ namespace Fitogram.Knowable
 {
     public interface IKnowable
     {
+        public object InnerValue { get; }
         bool IsKnown { get; }
         object Value { get; set; }
     }
@@ -38,13 +39,25 @@ namespace Fitogram.Knowable
                     _ => throw new InvalidEnumArgumentException("Type of enum not known.")
                 };
             }
-            private set => _innerValue = value.ToString();
+            set => _innerValue = value.ToString();
         }
 
         object IKnowable.Value
         {
             get => Value;
             set => InnerValue = value;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj is Knowable<T>)
+            {
+                Knowable<T>? knowable2 = obj as Knowable<T>?;
+
+                return this.Value.Equals(knowable2.Value.Value);
+            }
+
+            return base.Equals(obj);
         }
 
         public static implicit operator Knowable<T>(string value)

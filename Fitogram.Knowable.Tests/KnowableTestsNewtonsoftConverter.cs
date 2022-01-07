@@ -54,44 +54,45 @@ namespace Fitogram.Knowable.Tests
             public Knowable<EnumWithBar> KnowableEnum { get; set; }
         }
 
-        [Theory]
-        [InlineData(EnumWithBar.Foo, true, false, false)]
-        [InlineData(EnumWithBar.Bar, false, false, false)]
-        [InlineData(EnumWithBar.Foo, true, false, true)]
-        [InlineData(EnumWithBar.Bar, false, true, true)]
-        public void UnknowableTest(EnumWithBar enumWithBar, bool shouldBeKnown, bool willThrow, bool useStringEnumConverter)
-        {
-            // [Arrange]
-
-            if (useStringEnumConverter)
-                AddStringEnumConverter();
-
-            UnknowableDummyWithBar unknowableDummyWithBar = new UnknowableDummyWithBar
-            {
-                UnknowableEnum = enumWithBar,
-            };
-
-            // [Act]
-
-            string json = JsonConvert.SerializeObject(unknowableDummyWithBar, _jsonSerializerSettings);;
-
-            if (willThrow)
-            {
-                Should.Throw<JsonSerializationException>(()
-                    => JsonConvert.DeserializeObject<UnknowableDummyWithoutBar>(json, _jsonSerializerSettings)
-                );
-            }
-            else
-            {
-                UnknowableDummyWithoutBar unknowableDummyWithoutBar =
-                    JsonConvert.DeserializeObject<UnknowableDummyWithoutBar>(json, _jsonSerializerSettings);
-
-                // [Assert]
-
-                if (shouldBeKnown)
-                    unknowableDummyWithoutBar.UnknowableEnum.ToString().ShouldBe(enumWithBar.ToString());
-            }
-        }
+        // Example of what happens if you don't have Knowable.
+        // [Theory]
+        // [InlineData(EnumWithBar.Foo, true, false, false)]
+        // [InlineData(EnumWithBar.Bar, false, false, false)]
+        // [InlineData(EnumWithBar.Foo, true, false, true)]
+        // [InlineData(EnumWithBar.Bar, false, true, true)]
+        // public void UnknowableTest(EnumWithBar enumWithBar, bool shouldBeKnown, bool willThrow, bool useStringEnumConverter)
+        // {
+        //     // [Arrange]
+        //
+        //     if (useStringEnumConverter)
+        //         AddStringEnumConverter();
+        //
+        //     UnknowableDummyWithBar unknowableDummyWithBar = new UnknowableDummyWithBar
+        //     {
+        //         UnknowableEnum = enumWithBar,
+        //     };
+        //
+        //     // [Act]
+        //
+        //     string json = JsonConvert.SerializeObject(unknowableDummyWithBar, _jsonSerializerSettings);;
+        //
+        //     if (willThrow)
+        //     {
+        //         Should.Throw<JsonSerializationException>(()
+        //             => JsonConvert.DeserializeObject<UnknowableDummyWithoutBar>(json, _jsonSerializerSettings)
+        //         );
+        //     }
+        //     else
+        //     {
+        //         UnknowableDummyWithoutBar unknowableDummyWithoutBar =
+        //             JsonConvert.DeserializeObject<UnknowableDummyWithoutBar>(json, _jsonSerializerSettings);
+        //
+        //         // [Assert]
+        //
+        //         if (shouldBeKnown)
+        //             unknowableDummyWithoutBar.UnknowableEnum.ToString().ShouldBe(enumWithBar.ToString());
+        //     }
+        // }
 
         [Theory]
         [InlineData(EnumWithBar.Foo, true, false)]
@@ -125,6 +126,57 @@ namespace Fitogram.Knowable.Tests
                 knowableDummyWithoutBar.KnowableEnum.Value.ToString().ShouldBe(enumWithBar.ToString());
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Knowable_ShouldSerializeCorrectly(bool useStringEnumConverter)
+        {
+            // [Arrange]
+
+            if (useStringEnumConverter)
+                AddStringEnumConverter();
+
+            KnowableDummyWithBar knowableDummyWithBar = new KnowableDummyWithBar
+            {
+                KnowableEnum = EnumWithBar.Bar,
+            };
+
+            // [Act]
+
+            string json = JsonConvert.SerializeObject(knowableDummyWithBar, _jsonSerializerSettings);
+
+            // [Assert]
+
+            if (useStringEnumConverter)
+                json.ShouldBe("{\"KnowableEnum\":\"Bar\"}");
+            else
+                json.ShouldBe("{\"KnowableEnum\":2}");
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Knowable_ShouldDeserializeCorrectly(bool useStringEnumConverter)
+        {
+            // [Arrange]
+
+            if (useStringEnumConverter)
+                AddStringEnumConverter();
+
+            string json = useStringEnumConverter
+                ? "{\"KnowableEnum\":\"Bar\"}"
+                : "{\"KnowableEnum\":2}";
+
+            // [Act]
+
+            KnowableDummyWithBar knowableDummyWithBar = JsonConvert.DeserializeObject<KnowableDummyWithBar>(json, _jsonSerializerSettings);
+
+            // [Assert]
+
+            knowableDummyWithBar.KnowableEnum.IsKnown.ShouldBe(true);
+            knowableDummyWithBar.KnowableEnum.Value.ShouldBe(EnumWithBar.Bar);
+        }
+
         public class DummyWithStandardProperty
         {
             public string MyString { get; set; }
@@ -137,7 +189,7 @@ namespace Fitogram.Knowable.Tests
         {
             // [Arrange]
 
-            AddStringEnumConverter();
+            // AddStringEnumConverter();
 
             DummyWithStandardProperty input = new DummyWithStandardProperty
             {
@@ -160,35 +212,23 @@ namespace Fitogram.Knowable.Tests
             output.KnowableEnum.ShouldBe(input.KnowableEnum);
         }
 
-        // Custom serializer is not used on single properties. I think that's just not supported.
-        // [Theory]
-        // [InlineData(EnumWithBar.Foo, true)]
-        // [InlineData(EnumWithBar.Bar, false)]
-        // public void Wrapped(Knowable<EnumWithBar> dummyEnum2, bool shouldBeKnown)
-        // {
-        //     string json = JsonConvert.SerializeObject(dummyEnum2, _jsonSerializerSettings);
-        //
-        //     Knowable<EnumWithoutBar> enum2 = JsonConvert.DeserializeObject<Knowable<EnumWithoutBar>>(json);
-        //
-        //     enum2.IsKnown.ShouldBe(shouldBeKnown);
-        //
-        //     if (shouldBeKnown)
-        //         enum2.Value.ToString().ShouldBe(dummyEnum2.Value.ToString());
-        // }
-        //
-        // [Theory]
-        // [InlineData(EnumWithBar.Foo, true)]
-        // [InlineData(EnumWithBar.Bar, false)]
-        // public void NotWrapped(EnumWithBar dummyEnum2, bool shouldBeKnown)
-        // {
-        //     string json = JsonConvert.SerializeObject(dummyEnum2, _jsonSerializerSettings);
-        //
-        //     EnumWithoutBar enum2 = JsonConvert.DeserializeObject<EnumWithoutBar>(json);
-        //
-        //     // enum2.ShouldBe(shouldBeKnown);
-        //
-        //     if (shouldBeKnown)
-        //         enum2.ToString().ShouldBe(dummyEnum2.ToString());
-        // }
+        [Theory]
+        [InlineData(EnumWithBar.Foo, true)]
+        [InlineData(EnumWithBar.Bar, false)]
+        public void Knowable_SerializeSingleProperty(Knowable<EnumWithBar> dummyEnum2, bool shouldBeKnown)
+        {
+            // [Act]
+
+            string json = JsonConvert.SerializeObject(dummyEnum2, _jsonSerializerSettings);
+
+            Knowable<EnumWithoutBar> enum2 = JsonConvert.DeserializeObject<Knowable<EnumWithoutBar>>(json, _jsonSerializerSettings);
+
+            // [Assert]
+
+            enum2.IsKnown.ShouldBe(shouldBeKnown);
+
+            if (shouldBeKnown)
+                enum2.Value.ToString().ShouldBe(dummyEnum2.Value.ToString());
+        }
     }
 }
