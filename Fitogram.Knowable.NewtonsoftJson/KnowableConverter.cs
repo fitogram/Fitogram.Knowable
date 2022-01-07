@@ -4,7 +4,7 @@ using JsonSerializer = Newtonsoft.Json.JsonSerializer;
 
 namespace Fitogram.Knowable.NewtonsoftJson
 {
-    public class KnowableJsonConverter : JsonConverter<IKnowable>
+    public class KnowableConverter : JsonConverter<IKnowable>
     {
         public override IKnowable ReadJson(JsonReader reader, Type objectType, IKnowable existingValue, bool hasExistingValue, JsonSerializer serializer)
         {

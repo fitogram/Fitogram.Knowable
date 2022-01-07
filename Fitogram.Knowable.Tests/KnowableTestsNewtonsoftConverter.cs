@@ -12,7 +12,7 @@ namespace Fitogram.Knowable.Tests
         public KnowableTestsNewtonsoftConverter()
         {
             _jsonSerializerSettings = new JsonSerializerSettings();
-            _jsonSerializerSettings.Converters.Add(new Fitogram.Knowable.NewtonsoftJson.KnowableJsonConverter());
+            _jsonSerializerSettings.Converters.Add(new Fitogram.Knowable.NewtonsoftJson.KnowableConverter());
         }
 
         /// <summary>
