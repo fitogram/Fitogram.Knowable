@@ -39,7 +39,7 @@ namespace Fitogram.Knowable
                     _ => throw new InvalidEnumArgumentException("Type of enum not known.")
                 };
             }
-            set => _innerValue = value.ToString();
+            set => InnerValue = value.ToString();
         }
 
         object IKnowable.Value
@@ -58,6 +58,11 @@ namespace Fitogram.Knowable
             }
 
             return base.Equals(obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return InnerValue.GetHashCode();
         }
 
         public static implicit operator Knowable<T>(string value)

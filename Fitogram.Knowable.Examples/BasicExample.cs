@@ -6,8 +6,7 @@ namespace Fitogram.Knowable.Examples
     {
         public void Run()
         {
-            Knowable<MyEnum> myKnowableEnum = new Knowable<MyEnum>();
-            myKnowableEnum = 1;
+            Knowable<MyEnum> myKnowableEnum = 1;
             Console.WriteLine(myKnowableEnum.IsKnown); // True
             Console.WriteLine(myKnowableEnum.Value); // Foo
             myKnowableEnum = 2;

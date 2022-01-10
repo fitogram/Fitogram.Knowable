@@ -177,7 +177,7 @@ namespace Fitogram.Knowable.Tests
             knowableDummyWithBar.KnowableEnum.Value.ShouldBe(EnumWithBar.Bar);
         }
 
-        public class DummyWithStandardProperty
+        private class DummyWithStandardProperty
         {
             public string MyString { get; set; }
             public Guid MyGuid { get; set; }
@@ -188,8 +188,6 @@ namespace Fitogram.Knowable.Tests
         public void Knowable_ShouldNotTouchOtherProperties()
         {
             // [Arrange]
-
-            // AddStringEnumConverter();
 
             DummyWithStandardProperty input = new DummyWithStandardProperty
             {

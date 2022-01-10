@@ -8,7 +8,7 @@ namespace Fitogram.Knowable.Examples
         public void Run()
         {
             JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions();
-            jsonSerializerOptions.Converters.Add(new Fitogram.Knowable.SystemTextJson.KnowableJsonConverter());
+            jsonSerializerOptions.Converters.Add(new Fitogram.Knowable.SystemTextJson.KnowableConverter());
             jsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
 
             // The JSON would come from an external application which might have enums your application does not know.
