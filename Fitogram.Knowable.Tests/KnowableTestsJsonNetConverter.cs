@@ -214,8 +214,12 @@ namespace Fitogram.Knowable.Tests
         [Theory]
         [InlineData(EnumWithBar.Foo, true)]
         [InlineData(EnumWithBar.Bar, false)]
-        public void Knowable_SerializeSingleProperty(Knowable<EnumWithBar> dummyEnum2, bool shouldBeKnown)
+        public void Knowable_SerializeSingleProperty(EnumWithBar input, bool shouldBeKnown)
         {
+            // [Arrange]
+
+            Knowable<EnumWithBar> dummyEnum2 = input;
+
             // [Act]
 
             string json = JsonSerializer.Serialize(dummyEnum2, _jsonSerializerSettings);
