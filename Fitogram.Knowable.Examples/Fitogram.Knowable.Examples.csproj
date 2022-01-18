@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <LangVersion>9</LangVersion>
+        <OutputType>Exe</OutputType>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Fitogram.Knowable.NewtonsoftJson\Fitogram.Knowable.NewtonsoftJson.csproj" />
+      <ProjectReference Include="..\Fitogram.Knowable.SystemTextJson\Fitogram.Knowable.SystemTextJson.csproj" />
+      <ProjectReference Include="..\Fitogram.Knowable\Fitogram.Knowable.csproj" />
+    </ItemGroup>
+
+</Project>
