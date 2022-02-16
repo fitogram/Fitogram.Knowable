@@ -154,6 +154,56 @@ namespace Fitogram.Knowable.Tests
                 json.ShouldBe("{\"KnowableEnum\":2}");
         }
 
+        [Fact] public void Knowable_ShouldSerializeCorrectly_DefaultSerializer()
+        {
+            // [Arrange]
+
+            KnowableDummyWithBar knowableDummyWithBar = new KnowableDummyWithBar
+            {
+                KnowableEnum = EnumWithBar.Bar,
+            };
+
+            // [Act]
+
+            string json = JsonSerializer.Serialize(knowableDummyWithBar);
+
+            // [Assert]
+
+            json.ShouldBe("{\"KnowableEnum\":{\"InnerValue\":\"Bar\",\"IsKnown\":true,\"Value\":2}}");
+        }
+
+        [Fact]
+        public void Knowable_ShouldDeserializeCorrectly_DefaultSerializer()
+        {
+            // [Arrange]
+
+            string json = "{\"KnowableEnum\":{\"InnerValue\":\"Bar\",\"IsKnown\":true,\"Value\":2}}";
+
+            // [Act]
+
+            KnowableDummyWithBar knowableDummyWithBar = JsonSerializer.Deserialize<KnowableDummyWithBar>(json);
+
+            // [Assert]
+
+            knowableDummyWithBar.KnowableEnum.Value.ShouldBe(EnumWithBar.Bar);
+        }
+
+        [Fact]
+        public void Knowable_ShouldDeserializeCorrectly_DefaultSerializer2()
+        {
+            // [Arrange]
+
+            string json = "{\"KnowableEnum\":2}";
+
+            // [Act]
+
+            KnowableDummyWithBar knowableDummyWithBar = JsonSerializer.Deserialize<KnowableDummyWithBar>(json);
+
+            // [Assert]
+
+            knowableDummyWithBar.KnowableEnum.Value.ShouldBe(EnumWithBar.Bar);
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
@@ -168,7 +218,7 @@ namespace Fitogram.Knowable.Tests
                 ? "{\"KnowableEnum\":\"Bar\"}"
                 : "{\"KnowableEnum\":2}";
 
-                // [Act]
+            // [Act]
 
             KnowableDummyWithBar knowableDummyWithBar = JsonSerializer.Deserialize<KnowableDummyWithBar>(json, _jsonSerializerSettings);
 
