@@ -20,7 +20,7 @@ jobs:
       run: |
         # Compose package version
         PACKAGE_VERSION=1.0
-        PACKAGE_VERSION=$PACKAGE_VERSION.$TRAVIS_BUILD_NUMBER
+        # PACKAGE_VERSION=$PACKAGE_VERSION.$TRAVIS_BUILD_NUMBER
         if [[ $TRAVIS_BRANCH != "master" ]]; then PACKAGE_VERSION=$PACKAGE_VERSION-$TRAVIS_BRANCH; fi
         PACKAGE_VERSION=${PACKAGE_VERSION//\//-}
         # Restore nuget packages
