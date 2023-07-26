@@ -19,19 +19,19 @@ jobs:
     - name: Set Package version
       run: |
         # Compose package version
-        - PACKAGE_VERSION=1.0
-        - PACKAGE_VERSION=$PACKAGE_VERSION.$TRAVIS_BUILD_NUMBER
-        - if [[ $TRAVIS_BRANCH != "master" ]]; then PACKAGE_VERSION=$PACKAGE_VERSION-$TRAVIS_BRANCH; fi
-        - PACKAGE_VERSION=${PACKAGE_VERSION//\//-}
+        PACKAGE_VERSION=1.0
+        PACKAGE_VERSION=$PACKAGE_VERSION.$TRAVIS_BUILD_NUMBER
+        if [[ $TRAVIS_BRANCH != "master" ]]; then PACKAGE_VERSION=$PACKAGE_VERSION-$TRAVIS_BRANCH; fi
+        PACKAGE_VERSION=${PACKAGE_VERSION//\//-}
         # Restore nuget packages
-        - dotnet restore
+        dotnet restore
         # Build nuget packages
-        - dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable
-        - dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable.NewtonsoftJson
-        - dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable.SystemTextJson
+        dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable
+        dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable.NewtonsoftJson
+        dotnet pack -c Release /property:Version=$PACKAGE_VERSION ./Fitogram.Knowable.SystemTextJson
         # Run tests
-        - dotnet test --nologo
+        dotnet test --nologo
         # Publish nuget packages
-        - dotnet nuget push ./Fitogram.Knowable/bin/Release/Fitogram.Knowable.$PACKAGE_VERSION.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json"
-        - dotnet nuget push ./Fitogram.Knowable.NewtonsoftJson/bin/Release/Fitogram.Knowable.NewtonsoftJson.$PACKAGE_VERSION.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json"
-        - dotnet nuget push ./Fitogram.Knowable.SystemTextJson/bin/Release/Fitogram.Knowable.SystemTextJson.$PACKAGE_VERSION.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json"
+        dotnet nuget push ./Fitogram.Knowable/bin/Release/Fitogram.Knowable.$PACKAGE_VERSION.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json"
+        dotnet nuget push ./Fitogram.Knowable.NewtonsoftJson/bin/Release/Fitogram.Knowable.NewtonsoftJson.$PACKAGE_VERSION.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json"
+        dotnet nuget push ./Fitogram.Knowable.SystemTextJson/bin/Release/Fitogram.Knowable.SystemTextJson.$PACKAGE_VERSION.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json"
