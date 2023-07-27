@@ -29,8 +29,19 @@ jobs:
     - name: Nerdbank.GitVersioning
       id: nbgv
       uses: dotnet/nbgv@v0.4.1
+    - name: Build version (master)
+      if: github.event_name == 'push'
+      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}" >> $GITHUB_ENV
+      shell: bash
+    - name: Build version (PR)
+      if: github.event_name == 'pull_request'
+      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}-${{ env.CI_GITHUB_REF_SLUG }}" >> $GITHUB_ENV
+      shell: bash
     - run: |
+        echo 'PUBLISH_VERSION=${{ env.PUBLISH_VERSION }}'
         echo 'slug=${{ env.CI_GITHUB_REF_SLUG }}'
+        echo 'GitBuildVersion=${{ steps.nbgv.outputs.GitBuildVersion }}'
+        echo 'versionHeight=${{ steps.nbgv.outputs.VersionHeight }}'
         echo 'SemVer1=${{ steps.nbgv.outputs.SemVer1 }}'
         echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
         echo 'CloudBuildNumber=${{ steps.nbgv.outputs.CloudBuildNumber }}'
