@@ -30,7 +30,7 @@ jobs:
       id: nbgv
       uses: dotnet/nbgv@v0.4.1
     - run: |
-        echo 'SemVer1=${{ env.GITHUB_REF_SLUG }}'
+        echo 'slug=${{ env.CI_GITHUB_REF_SLUG }}'
         echo 'SemVer1=${{ steps.nbgv.outputs.SemVer1 }}'
         echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
         echo 'CloudBuildNumber=${{ steps.nbgv.outputs.CloudBuildNumber }}'
