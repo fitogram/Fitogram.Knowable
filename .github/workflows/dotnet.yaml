@@ -3,7 +3,13 @@ name: .NET
 on:
   push:
     branches:
-      - master
+      - '*'
+    # Run only when there is no open pull request
+    # (i.e., this is a direct push to the branch)
+    # and the branch is not master
+    if: >
+      github.event.pull_request == null &&
+      github.ref != 'refs/heads/master'
   pull_request:
     branches:
       - master
@@ -37,9 +43,13 @@ jobs:
       if: github.event.pull_request.merged == 'true'
       run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}" >> $GITHUB_ENV
       shell: bash
-    - name: Build version (PR)
-      if: github.event.pull_request.merged != 'true'
-      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-${{ env.CI_GITHUB_HEAD_REF_SLUG }}" >> $GITHUB_ENV
+    - name: Build version (branch)
+      # Run only when pushing to a branch that is not master
+      # and there is no open pull request
+      if: >
+        github.event.pull_request == null &&
+        github.ref != 'refs/heads/master'
+      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-$(echo $GITHUB_REF | sed 's#refs/heads/##')" >> $GITHUB_ENV
       shell: bash
     - run: |
         echo 'PUBLISH_VERSION=${{ env.PUBLISH_VERSION }}'
@@ -52,9 +62,3 @@ jobs:
         echo 'SimpleVersion=${{ steps.nbgv.outputs.SimpleVersion }}'
         echo 'PrereleaseVersion=${{ steps.nbgv.outputs.PrereleaseVersion }}'
         echo 'Prerelease=${{ steps.nbgv.outputs.Prerelease }}'
-    #- name: Build
-    #  run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SemVer2 }} --no-restore
-    #- name: Pack
-    #  run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SemVer2 }}
-    #- name: Push
-    #  run: dotnet nuget push **/bin/Release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json --skip-duplicate --no-symbols
