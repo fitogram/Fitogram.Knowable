@@ -1,0 +1,33 @@
+name: .NET
+
+on:
+  push:
+    branches:
+      - '**'        # matches every branch
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: |
+          6.x
+          3.1.x
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Nerdbank.GitVersioning
+      id: nbgv
+      uses: dotnet/nbgv@v0.4.1
+    - name: Build
+      run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.NuGetPackageVersion }} --no-restore
+    - name: Pack
+      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.NuGetPackageVersion }}
+    - name: Push
+      run: dotnet nuget push **/bin/Release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json --skip-duplicate --no-symbols
