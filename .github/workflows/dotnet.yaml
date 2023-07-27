@@ -38,8 +38,8 @@ jobs:
       run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}" >> $GITHUB_ENV
       shell: bash
     - name: Build version (PR)
-      if: github.event_name == 'push' && github.event.pull_request.merged != 'true'
-      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-${{ env.CI_GITHUB_REF_SLUG }}" >> $GITHUB_ENV
+      if: github.event.pull_request.merged != 'true'
+      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-${{ env.CI_CI_GITHUB_HEAD_REF_SLUG }}" >> $GITHUB_ENV
       shell: bash
     - run: |
         echo 'PUBLISH_VERSION=${{ env.PUBLISH_VERSION }}'
