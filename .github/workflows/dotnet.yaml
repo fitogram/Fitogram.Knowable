@@ -11,6 +11,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Inject slug/short variables
+      uses: rlespinasse/github-slug-action@v4
+        with:
+          prefix: CI_
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
@@ -26,9 +30,12 @@ jobs:
       id: nbgv
       uses: dotnet/nbgv@v0.4.1
     - run: |
+        echo 'refname=${{ env.GITHUB_REF_SLUG }}'
+        echo 'SemVer1=${{ steps.nbgv.outputs.SemVer1 }}'
         echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
         echo 'CloudBuildNumber=${{ steps.nbgv.outputs.CloudBuildNumber }}'
-        echo 'SimpleVersion=${{ steps.nbgv.SimpleVersion.CloudBuildNumber }}'
+        echo 'SimpleVersion=${{ steps.nbgv.outputs.SimpleVersion }}'
+        echo 'PrereleaseVersion=${{ steps.nbgv.outputs.PrereleaseVersion }}'
     #- name: Build
     #  run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SemVer2 }} --no-restore
     #- name: Pack
