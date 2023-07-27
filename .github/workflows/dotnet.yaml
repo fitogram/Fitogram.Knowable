@@ -13,7 +13,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0
+        fetch-depth: 0 # avoid shallow clone so nbgv can do its work.
     - name: Setup .NET
       uses: actions/setup-dotnet@v1
       with:
@@ -27,10 +27,10 @@ jobs:
       uses: dotnet/nbgv@v0.4.1
     - run: |
         echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
-        echo 'SimpleVersion=${{ steps.nbgv.outputs.SimpleVersion }}'
+        echo 'NuGetPackageVersion=${{ steps.nbgv.outputs.NuGetPackageVersion }}'
     - name: Build
-      run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SimpleVersion }} --no-restore
+      run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.NuGetPackageVersion }} --no-restore
     - name: Pack
-      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SimpleVersion }}
+      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.NuGetPackageVersion }}
     - name: Push
       run: dotnet nuget push **/bin/Release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json
