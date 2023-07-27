@@ -32,16 +32,13 @@ jobs:
     - name: Nerdbank.GitVersioning
       id: nbgv
       uses: dotnet/nbgv@v0.4.1
-    - run: echo ${{ github.event_name }}
     - name: Build version (master)
-      if: github.event.pull_request.merged == 'true'
-      run: |
-        echo "PRERELEASE='false'"
+      if: env.CI_GITHUB_REF_SLUG == 'master'
+      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}" >> $GITHUB_ENV
       shell: bash
     - name: Build version (PR)
-      if: github.event.pull_request.merged != 'true'
-      run: |
-        echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-${{ env.CI_GITHUB_HEAD_REF_SLUG }}" >> $GITHUB_ENV
+      if: env.CI_GITHUB_REF_SLUG != 'master'
+      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-${{ env.CI_GITHUB_HEAD_REF_SLUG }}" >> $GITHUB_ENV
       shell: bash
     - name: Build
       run: dotnet build --configuration Release -p:Version=${{ env.PUBLISH_VERSION }} --no-restore
