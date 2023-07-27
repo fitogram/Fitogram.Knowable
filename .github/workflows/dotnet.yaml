@@ -1,4 +1,4 @@
-name: .NET
+name: Publish Package
 
 on:
   push:
@@ -22,7 +22,7 @@ jobs:
       with:
         prefix: CI_
     - name: Setup .NET
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v2
       with:
         dotnet-version: |
           6.x
@@ -35,11 +35,9 @@ jobs:
     - name: Build version (master)
       if: env.CI_GITHUB_REF_SLUG == 'master'
       run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}" >> $GITHUB_ENV
-      shell: bash
     - name: Build version (PR)
       if: env.CI_GITHUB_REF_SLUG != 'master'
       run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-${{ env.CI_GITHUB_HEAD_REF_SLUG }}" >> $GITHUB_ENV
-      shell: bash
     - name: Build
       run: dotnet build --configuration Release -p:Version=${{ env.PUBLISH_VERSION }} --no-restore
     - name: Pack
