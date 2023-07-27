@@ -3,13 +3,7 @@ name: .NET
 on:
   push:
     branches:
-      - '*'
-    # Run only when there is no open pull request
-    # (i.e., this is a direct push to the branch)
-    # and the branch is not master
-    if: >
-      github.event.pull_request == null &&
-      github.ref != 'refs/heads/master'
+      - master
   pull_request:
     branches:
       - master
@@ -38,30 +32,20 @@ jobs:
     - name: Nerdbank.GitVersioning
       id: nbgv
       uses: dotnet/nbgv@v0.4.1
-    - run: |
-        echo ******************************************
-        echo ${{ github.event_name }}
-        echo ******************************************
+    - run: echo ${{ github.event_name }}
     - name: Build version (master)
       if: github.event.pull_request.merged == 'true'
-      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}" >> $GITHUB_ENV
+      run: |
+        echo "PRERELEASE='false'"
       shell: bash
-    - name: Build version (branch)
-      # Run only when pushing to a branch that is not master
-      # and there is no open pull request
-      if: >
-        github.event.pull_request == null &&
-        github.ref != 'refs/heads/master'
-      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-$(echo $GITHUB_REF | sed 's#refs/heads/##')" >> $GITHUB_ENV
+    - name: Build version (PR)
+      if: github.event.pull_request.merged != 'true'
+      run: |
+        echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-${{ env.CI_GITHUB_HEAD_REF_SLUG }}" >> $GITHUB_ENV
       shell: bash
-    - run: |
-        echo 'PUBLISH_VERSION=${{ env.PUBLISH_VERSION }}'
-        echo 'slug=${{ env.CI_GITHUB_REF_SLUG }}'
-        echo 'GitBuildVersion=${{ steps.nbgv.outputs.GitBuildVersion }}'
-        echo 'versionHeight=${{ steps.nbgv.outputs.VersionHeight }}'
-        echo 'SemVer1=${{ steps.nbgv.outputs.SemVer1 }}'
-        echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
-        echo 'CloudBuildNumber=${{ steps.nbgv.outputs.CloudBuildNumber }}'
-        echo 'SimpleVersion=${{ steps.nbgv.outputs.SimpleVersion }}'
-        echo 'PrereleaseVersion=${{ steps.nbgv.outputs.PrereleaseVersion }}'
-        echo 'Prerelease=${{ steps.nbgv.outputs.Prerelease }}'
+    - name: Build
+      run: dotnet build --configuration Release -p:Version=${{ env.PUBLISH_VERSION }} --no-restore
+    - name: Pack
+      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ env.PUBLISH_VERSION }}
+    - name: Push
+      run: dotnet nuget push **/bin/Release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json --skip-duplicate --no-symbols
