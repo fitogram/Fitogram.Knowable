@@ -25,9 +25,13 @@ jobs:
     - name: Nerdbank.GitVersioning
       id: nbgv
       uses: dotnet/nbgv@v0.4.1
-    - name: Build
-      run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SemVer2 }} --no-restore
-    - name: Pack
-      run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SemVer2 }}
-    - name: Push
-      run: dotnet nuget push **/bin/Release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json --skip-duplicate --no-symbols
+    - run: |
+      echo 'SemVer2=${{ steps.nbgv.outputs.SemVer2 }}'
+      echo 'CloudBuildNumber=${{ steps.nbgv.outputs.CloudBuildNumber }}'
+      echo 'SimpleVersion=${{ steps.nbgv.SimpleVersion.CloudBuildNumber }}'
+    #- name: Build
+    #  run: dotnet build --configuration Release -p:Version=${{ steps.nbgv.outputs.SemVer2 }} --no-restore
+    #- name: Pack
+    #  run: dotnet pack --configuration Release --no-build -p:PackageVersion=${{ steps.nbgv.outputs.SemVer2 }}
+    #- name: Push
+    #  run: dotnet nuget push **/bin/Release/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} -s https://nuget.pkg.github.com/urbansportsclub/index.json --skip-duplicate --no-symbols
