@@ -38,7 +38,10 @@ jobs:
     - name: Nerdbank.GitVersioning
       id: nbgv
       uses: dotnet/nbgv@v0.4.1
-    - run: echo ${{ github.event_name }}
+    - run: |
+        echo ******************************************
+        echo ${{ github.event_name }}
+        echo ******************************************
     - name: Build version (master)
       if: github.event.pull_request.merged == 'true'
       run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}" >> $GITHUB_ENV
