@@ -3,7 +3,10 @@ name: .NET
 on:
   push:
     branches:
-      - '**'        # matches every branch
+    - master
+  pull_request:
+    branches:
+    - master
 
 jobs:
   build:
@@ -30,12 +33,12 @@ jobs:
       id: nbgv
       uses: dotnet/nbgv@v0.4.1
     - name: Build version (master)
-      if: github.event_name == 'push'
-      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}" >> $GITHUB_ENV
+      if: github.event.pull_request.merged == 'true'
+      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}" >> $GITHUB_ENV
       shell: bash
     - name: Build version (PR)
-      if: github.event_name == 'pull_request'
-      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}-${{ env.CI_GITHUB_REF_SLUG }}" >> $GITHUB_ENV
+      if: github.event.pull_request.merged -= 'false'
+      run: echo "PUBLISH_VERSION=${{ steps.nbgv.outputs.SimpleVersion }}.${{ steps.nbgv.outputs.VersionHeight }}-${{ env.CI_GITHUB_REF_SLUG }}" >> $GITHUB_ENV
       shell: bash
     - run: |
         echo 'PUBLISH_VERSION=${{ env.PUBLISH_VERSION }}'
