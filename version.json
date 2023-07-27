@@ -5,8 +5,7 @@
         "precision": "revision"
     },
     "publicReleaseRefSpec": [
-        "^refs/heads/master$",
-        "^refs/heads/v\\d+(?:\\.\\d+)?$"
+        "^refs/heads/master$"
     ],
     "cloudBuild": {
         "buildNumber": {
