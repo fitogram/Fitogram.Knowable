@@ -1,5 +1,25 @@
 # Fitogram.Knowable
 
+## NuGet Setup
+
+The NuGet.config file is configured to use environment variables for some sources which need to be set
+### Setting environment variables
+
+On Windows, use the setx command to add the corresponding environment variables. It’s also possible to set machine-wide variables using the /s switch. Alternatively you can set them using the System properties window, but don’t forget to reopen the command prompt to use the new values.
+
+> GitHub Package Registry
+```
+setx GPR_USER your_github_username
+setx GPR_TOKEN your_github_pat
+````
+
+On Unix systems it depends on your shell program. You can use the following commands to set environment variables when using Bash.
+> GitHub Package Registry
+```
+export GPR_USER=your_github_username
+export GPR_TOKEN=your_github_pat
+````
+
 ## Knowable\<T>
 
 ### Basic example
